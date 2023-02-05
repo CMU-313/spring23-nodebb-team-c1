@@ -1,63 +1,74 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.pluginHook = exports.rewrite = void 0;
-const url_1 = __importDefault(require("url"));
-const plugins_1 = __importDefault(require("../plugins"));
-const meta_1 = __importDefault(require("../meta"));
-const user_1 = __importDefault(require("../user"));
-function adminHomePageRoute() {
-    // The next line calls a function in a module that has not been updated to TS yet
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    return ((meta_1.default.config.homePageRoute === 'custom' ? meta_1.default.config.homePageCustom : meta_1.default.config.homePageRoute) || 'categories').replace(/^\//, '');
+import url from 'url';
+
+import { Request, Response, NextFunction } from 'express';
+
+import plugins from '../plugins';
+import meta from '../meta';
+import user from '../user';
+
+import { SettingsObject } from '../types';
+
+type Locals = {
+    homePageRoute: string;
 }
-async function getUserHomeRoute(uid) {
+
+function adminHomePageRoute():string {
     // The next line calls a function in a module that has not been updated to TS yet
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    const settings = await user_1.default.getSettings(uid);
-    let route = adminHomePageRoute();
+    return ((meta.config.homePageRoute === 'custom' ? meta.config.homePageCustom : meta.config.homePageRoute) || 'categories').replace(/^\//, '') as string;
+}
+
+async function getUserHomeRoute(uid : number) : Promise<string> {
+    // The next line calls a function in a module that has not been updated to TS yet
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    const settings : SettingsObject = await user.getSettings(uid) as SettingsObject;
+    let route : string = adminHomePageRoute();
+
     if (settings.homePageRoute !== 'undefined' && settings.homePageRoute !== 'none') {
         route = (settings.homePageRoute || route).replace(/^\/+/, '');
     }
+
     return route;
 }
-async function rewrite(req, res, next) {
+
+export async function rewrite(req: Request & { uid: number }, res : Response, next: NextFunction): Promise<void> {
     if (req.path !== '/' && req.path !== '/api/' && req.path !== '/api') {
         return next();
     }
-    let route = adminHomePageRoute();
+
+    let route : string = adminHomePageRoute();
     // The next line calls a function in a module that has not been updated to TS yet
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    if (meta_1.default.config.allowUserHomePage) {
+    if (meta.config.allowUserHomePage) {
         route = await getUserHomeRoute(req.uid);
     }
-    let parsedUrl;
+
+    let parsedUrl : url.UrlWithParsedQuery;
     try {
-        parsedUrl = url_1.default.parse(route, true);
-    }
-    catch (err) {
+        parsedUrl = url.parse(route, true);
+    } catch (err : unknown) {
         return next(err);
     }
+
     const { pathname } = parsedUrl;
     const hook = `action:homepage.get:${pathname}`;
-    if (!plugins_1.default.hooks.hasListeners(hook)) {
+
+    if (!plugins.hooks.hasListeners(hook)) {
         req.url = req.path + (!req.path.endsWith('/') ? '/' : '') + pathname;
-    }
-    else {
+    } else {
         res.locals.homePageRoute = pathname;
     }
     req.query = Object.assign(parsedUrl.query, req.query);
+
     next();
 }
-exports.rewrite = rewrite;
-function pluginHook(req, res, next) {
+
+export function pluginHook(req: Request, res : Response<object, Locals>, next: NextFunction):void {
     const hook = `action:homepage.get:${res.locals.homePageRoute}`;
-    plugins_1.default.hooks.fire(hook, {
+
+    plugins.hooks.fire(hook, {
         req: req,
         res: res,
         next: next,
-    });
+    }) as void;
 }
-exports.pluginHook = pluginHook;
