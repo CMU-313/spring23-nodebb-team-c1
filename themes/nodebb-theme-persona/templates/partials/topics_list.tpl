@@ -21,13 +21,18 @@
                 <!-- ENDIF showSelect -->
 
                 <!-- IF !showSelect -->
-                <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->" class="pull-left">
-                    {{{ if ./thumbs.length }}}
-                    <img src="{./thumbs.0.url}" class="user-img not-responsive" />
-                    {{{ else }}}
-                    {buildAvatar(../user, "46", true, "not-responsive")}
-                    {{{ end }}}
-                </a>
+                    {{{if (topics.isAnonymous=="true")}}}
+                        <a href="#" class="pull-left"><img src="https://st3.depositphotos.com/7486768/17806/v/600/depositphotos_178065822-stock-illustration-profile-anonymous-face-icon-gray.jpg" class="user-img not-responsive" /></a>
+                    {{{end}}}
+                    {{{if (topics.isAnonymous!="true")}}}
+                        <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->" class="pull-left">
+                            {{{ if ./thumbs.length }}}
+                            <img src="{./thumbs.0.url}" class="user-img not-responsive" />
+                            {{{ else }}}
+                            {buildAvatar(../user, "46", true, "not-responsive")}
+                            {{{ end }}}
+                        </a>
+                    {{{end}}}
                 <!-- ENDIF !showSelect -->
             </div>
 
@@ -60,7 +65,19 @@
                 </span>
                 {{{ end }}}
 
-                <small class="hidden-xs"><span class="timeago" title="{topics.timestampISO}"></span> &bull; <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->">{topics.user.displayname}</a></small>
+                {{{if (topics.isAnonymous!="true")}}}
+                <small class="hidden-xs">
+                    <span class="timeago" title="{topics.timestampISO}">
+                    </span> &bull; 
+                    <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->">{topics.user.displayname}</a>
+                </small>
+                {{{else}}}
+                <small class="hidden-xs">
+                    <span class="timeago" title="{topics.timestampISO}">
+                    </span> &bull; 
+                    <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->">Anonymous</a>
+                </small>                
+                {{{end}}}
                 <small class="visible-xs-inline">
                     <!-- IF topics.teaser.timestamp -->
                     <span class="timeago" title="{topics.teaser.timestampISO}"></span>

@@ -68,8 +68,12 @@
 
                     <meta itemprop="datePublished" content="{posts.timestampISO}">
                     <meta itemprop="dateModified" content="{posts.editedISO}">
-
+                    
+                    
+                    
                     <!-- IMPORT partials/topic/post.tpl -->
+                    
+                    
                 </li>
                 {renderTopicEvents(@index, config.topicPostSort)}
             {{{end}}}
