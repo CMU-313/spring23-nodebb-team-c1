@@ -1,7 +1,7 @@
 <a component="post/endorse" data-endorsed="{posts.endorsed}" href="#" class="endorseBtn no-select">
 <!-- IF !posts.endorsed -->
-[[topic:endorse]]
+Endorse
 <!-- ELSE -->
-[[topic:unendorse]]
+Unendorse
 <!-- ENDIF !posts.endorsed -->
 </a>
