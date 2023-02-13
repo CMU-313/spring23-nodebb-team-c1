@@ -24,13 +24,16 @@ function default_1(Posts) {
             throw new Error('[[error:already-unendorsed]]');
         }
         if (isEndorsing) {
+            // The next line calls a function in a module that has not been updated to TS yet
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             await db.sortedSetAdd(`uid:${uid}:endorsed`, Date.now(), pid);
         }
         else {
+            // The next line calls a function in a module that has not been updated to TS yet
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             await db.sortedSetRemove(`uid:${uid}:endorsed`, pid);
         }
+        // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         await db[isEndorsing ? 'setAdd' : 'setRemove'](`pid:${pid}:users_endorsed`, uid);
         await plugins.hooks.fire(`action:post.${type}`, {
@@ -50,9 +53,11 @@ function default_1(Posts) {
         }
         if (Array.isArray(pid)) {
             const sets = pid.map(pid => `pid:${pid}:users_endorsed`);
+            // The next line calls a function in a module that has not been updated to TS yet
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             return await db.isMemberOfSets(sets, uid);
         }
+        // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         return await db.isSetMember(`pid:${pid}:users_endorsed`, uid);
     };
