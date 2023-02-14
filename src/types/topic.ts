@@ -3,7 +3,7 @@ import { TagObject } from './tag';
 import { UserObjectSlim } from './user';
 
 export type TopicObject =
-    TopicObjectSlim & TopicObjectCoreProperties & TopicObjectOptionalProperties;
+  TopicObjectSlim & TopicObjectCoreProperties & TopicObjectOptionalProperties;
 
 export type TopicObjectCoreProperties = {
   lastposttime: number;
