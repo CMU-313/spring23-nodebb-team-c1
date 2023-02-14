@@ -29,6 +29,7 @@ Notifications.baseTypes = [
     'notificationType_group-invite',
     'notificationType_group-leave',
     'notificationType_group-request-membership',
+    'notificationType_new-post',
 ];
 
 Notifications.privilegedTypes = [
@@ -147,8 +148,16 @@ Notifications.push = async function (notification, uids) {
         return;
     }
     uids = Array.isArray(uids) ? _.uniq(uids) : [uids];
-    if (!uids.length) {
-        return;
+
+    if (notification.type === 'notificationType_new-post') {
+        if (posts.getPostField(posts.pid, 'isPrivate') === false) {
+            uids = Array.isArray(uids) ? _.uniq(uids) : [uids];
+            if (!uids.length) {
+                return;
+            }
+        } else {
+            uids = uids.filter(Checkacounttype);
+        }
     }
 
     setTimeout(() => {
@@ -161,7 +170,10 @@ Notifications.push = async function (notification, uids) {
         });
     }, 1000);
 };
-
+function Checkacounttype(value) {
+    const PATTERN = 'instructor';
+    return value.accounttype === PATTERN;
+}
 async function pushToUids(uids, notification) {
     async function sendNotification(uids) {
         if (!uids.length) {
