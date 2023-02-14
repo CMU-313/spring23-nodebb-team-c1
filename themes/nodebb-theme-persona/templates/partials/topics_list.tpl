@@ -7,7 +7,7 @@
         <meta itemprop="position" content="{../index}" />
         <a id="{../index}" data-index="{../index}" component="topic/anchor"></a>
 
-        <div class="col-md-5 col-sm-9 col-xs-10 content">
+        <div class="col-md-6 col-sm-9 col-xs-10 content">
             <div class="avatar pull-left">
                 <!-- IF showSelect -->
                 <div class="select" component="topic/select">
@@ -21,18 +21,13 @@
                 <!-- ENDIF showSelect -->
 
                 <!-- IF !showSelect -->
-                    {{{if (topics.isAnonymous=="true")}}}
-                        <a href="#" class="pull-left"><img src="https://st3.depositphotos.com/7486768/17806/v/600/depositphotos_178065822-stock-illustration-profile-anonymous-face-icon-gray.jpg" class="user-img not-responsive" /></a>
-                    {{{end}}}
-                    {{{if (topics.isAnonymous!="true")}}}
-                        <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->" class="pull-left">
-                            {{{ if ./thumbs.length }}}
-                            <img src="{./thumbs.0.url}" class="user-img not-responsive" />
-                            {{{ else }}}
-                            {buildAvatar(../user, "46", true, "not-responsive")}
-                            {{{ end }}}
-                        </a>
-                    {{{end}}}
+                <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->" class="pull-left">
+                    {{{ if ./thumbs.length }}}
+                    <img src="{./thumbs.0.url}" class="user-img not-responsive" />
+                    {{{ else }}}
+                    {buildAvatar(../user, "46", true, "not-responsive")}
+                    {{{ end }}}
+                </a>
                 <!-- ENDIF !showSelect -->
             </div>
 
@@ -65,19 +60,7 @@
                 </span>
                 {{{ end }}}
 
-                {{{if (topics.isAnonymous!="true")}}}
-                <small class="hidden-xs">
-                    <span class="timeago" title="{topics.timestampISO}">
-                    </span> &bull; 
-                    <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->">{topics.user.displayname}</a>
-                </small>
-                {{{else}}}
-                <small class="hidden-xs">
-                    <span class="timeago" title="{topics.timestampISO}">
-                    </span> &bull; 
-                    <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->">Anonymous</a>
-                </small>                
-                {{{end}}}
+                <small class="hidden-xs"><span class="timeago" title="{topics.timestampISO}"></span> &bull; <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->">{topics.user.displayname}</a></small>
                 <small class="visible-xs-inline">
                     <!-- IF topics.teaser.timestamp -->
                     <span class="timeago" title="{topics.teaser.timestampISO}"></span>
@@ -88,17 +71,8 @@
             </h2>
         </div>
 
-        <div class="mobile-stat col-xs-2 visible-xs text-right stats">
+        <div class="mobile-stat col-xs-2 visible-xs text-right">
             <span class="human-readable-number">{topics.postcount}</span> <a href="{config.relative_path}/topic/{topics.slug}/{topics.teaser.index}"><i class="fa fa-arrow-circle-right"></i></a>
-        </div>
-
-        <div class="col-md-1 hidden-sm hidden-xs stats ">
-            <!-- IF !reputation:disabled -->
-                {{{if (topics.isPrivate=="true")}}}
-                    <span title="{topics.isPrivate}" class="private_icon">PRIVATE</span><br />
-                {{{end}}}
-            <small></small>
-            <!-- END -->
         </div>
 
         <div class="col-md-1 hidden-sm hidden-xs stats stats-votes">
