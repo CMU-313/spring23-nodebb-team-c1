@@ -20,6 +20,9 @@ module.exports = function (Topics) {
         // This is an internal method, consider using Topics.post instead
         const timestamp = data.timestamp || Date.now();
 
+        // console.log("============ TOPIC DATA ============")
+        // console.log(data)
+
         const tid = await db.incrObjectField('global', 'nextTid');
 
         let topicData = {
@@ -33,6 +36,7 @@ module.exports = function (Topics) {
             lastposttime: 0,
             postcount: 0,
             viewcount: 0,
+            isPrivate: data.isPrivate,
         };
 
         if (Array.isArray(data.tags) && data.tags.length) {
