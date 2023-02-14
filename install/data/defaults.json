@@ -108,7 +108,6 @@
     "notificationType_group-leave": "notification",
     "notificationType_group-request-membership": "notification",
     "notificationType_mention": "notification",
-    "notificationType_new-post": "notification",
     "notificationType_new-register": "notification",
     "notificationType_post-queue": "notification",
     "notificationType_new-post-flag": "notification",

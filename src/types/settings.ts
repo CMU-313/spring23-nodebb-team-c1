@@ -35,7 +35,6 @@ export type SettingsObject = {
   'notificationType_post-queue': string;
   'notificationType_new-post-flag': string;
   'notificationType_new-user-flag': string;
-  'notificationType_new-post': string;
   categoryWatchState: string;
   'notificationType_group-request-membership': string;
   uid: number;

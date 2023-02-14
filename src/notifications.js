@@ -29,7 +29,6 @@ Notifications.baseTypes = [
     'notificationType_group-invite',
     'notificationType_group-leave',
     'notificationType_group-request-membership',
-    'notificationType_new-post',
 ];
 
 Notifications.privilegedTypes = [
@@ -147,17 +146,11 @@ Notifications.push = async function (notification, uids) {
     if (!notification || !notification.nid) {
         return;
     }
-
-    if (notification.type === 'notificationType_new-post') {
-        if (posts.getPostField(posts.pid, 'isPrivate') === false) {
-            uids = Array.isArray(uids) ? _.uniq(uids) : [uids];
-            if (!uids.length) {
-                return;
-            }
-        } else {
-            uids = uids.filter(Checkacounttype);
-        }
+    uids = Array.isArray(uids) ? _.uniq(uids) : [uids];
+    if (!uids.length) {
+        return;
     }
+
     setTimeout(() => {
         batch.processArray(uids, async (uids) => {
             await pushToUids(uids, notification);
@@ -168,18 +161,12 @@ Notifications.push = async function (notification, uids) {
         });
     }, 1000);
 };
-function Checkacounttype(value) {
-    const PATTERN = 'instructor';
-    return value.accounttype === PATTERN;
-}
 
 async function pushToUids(uids, notification) {
     async function sendNotification(uids) {
         if (!uids.length) {
             return;
         }
-
-
         const cutoff = Date.now() - notificationPruneCutoff;
         const unreadKeys = uids.map(uid => `uid:${uid}:notifications:unread`);
         const readKeys = uids.map(uid => `uid:${uid}:notifications:read`);
@@ -457,6 +444,4 @@ Notifications.merge = async function (notifications) {
     return data && data.notifications;
 };
 
-
 require('./promisify')(Notifications);
-
