@@ -117,13 +117,15 @@ module.exports = function (Topics) {
         const [
             bookmarks,
             endorsed,
+            endorsedBy,
             voteData,
             userData,
             editors,
             replies,
         ] = await Promise.all([
             posts.hasBookmarked(pids, uid),
-            posts.hasEndorsed(pids, uid),
+            posts.hasEndorsed(pids),
+            posts.endorsedBy(pids),
             posts.getVoteStatusByPostIDs(pids, uid),
             getPostUserData('uid', async uids => await posts.getUserInfoForPosts(uids, uid)),
             getPostUserData('editor', async uids => await user.getUsersFields(uids, ['uid', 'username', 'userslug'])),
@@ -137,6 +139,7 @@ module.exports = function (Topics) {
                 postObj.editor = postObj.editor ? editors[postObj.editor] : null;
                 postObj.bookmarked = bookmarks[i];
                 postObj.endorsed = endorsed[i];
+                postObj.endorsedBy = endorsedBy[i];
                 postObj.upvoted = voteData.upvotes[i];
                 postObj.downvoted = voteData.downvotes[i];
                 postObj.votes = postObj.votes || 0;
