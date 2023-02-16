@@ -165,7 +165,10 @@ module.exports = function (Posts) {
     }
 
     async function deleteFromUserEndorsements(pids) {
-        await db.deleteAll(pids.map(pid => `pid:${pid}:users_endorsed`));
+        const keys = pids.map(pid => `pid:${pid}:users_endorsed`);
+        await Promise.all([
+            keys.map(key => db.deleteObjectField(key, 'uid')),
+        ]);
     }
 
     async function deleteFromUsersVotes(pids) {

@@ -1,6 +1,6 @@
 import db = require('../database');
 import plugins = require('../plugins');
-import { Action, PostData, ToggleData, UserData } from './types';
+import { Action, DBEndorseData, PostData, ToggleData, UserData } from './types';
 
 interface PostsType {
   getPostFields(pid: string, fields: string[]): Promise<PostData>,
@@ -23,22 +23,25 @@ export default function (Posts: PostsType) {
         ]);
 
         if (isEndorsing && hasEndorsed) {
-            throw new Error('You have already endorsed this post.');
+            throw new Error('This post is already unendorsed.');
         }
 
         if (!isEndorsing && !hasEndorsed) {
-            throw new Error('You have already unendorsed this post.');
+            throw new Error('This post is already unendorsed');
         }
 
         if (isEndorsing) {
+            // add/update endorsement
             // The next line calls a function in a module that has not been updated to TS yet
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-            db.setAdd(`pid:${pid}:users_endorsed`, uid);
+            await db.setObject(`pid:${pid}:users_endorsed`, {
+                uid: uid,
+            });
         } else {
-            // should only have one endorsement
+            // remove endorsement
             // The next line calls a function in a module that has not been updated to TS yet
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-            db.setRemoveRandom(`pid:${pid}:users_endorsed`);
+            await db.deleteObjectField(`pid:${pid}:users_endorsed`, 'uid');
         }
 
         await plugins.hooks.fire(`action:post.${type}`, {
@@ -59,20 +62,19 @@ export default function (Posts: PostsType) {
         if (parseInt(uid, 10) <= 0) {
             return Array.isArray(pid) ? pid.map(() => false) : false;
         }
-
         if (Array.isArray(pid)) {
             const sets = pid.map(pid => `pid:${pid}:users_endorsed`);
             // The next line calls a function in a module that has not been updated to TS yet
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-            const numEndorsed = await db.setsCount(sets) as number[];
+            const usersEndorsed = await db.getObjects(sets) as DBEndorseData[];
             // get all posts that have at least one endorsement
-            return numEndorsed.map(x => x > 0);
+            return usersEndorsed.map(x => x !== null);
         }
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        const numEndorsed = await db.setCount(`pid:${pid}:users_endorsed`) as number;
+        const userEndorsed = await db.getObject(`pid:${pid}:users_endorsed`) as DBEndorseData | null;
         // must have at least one endorsement
-        return numEndorsed > 0;
+        return userEndorsed !== null;
     };
 
     async function checkInstructor(uid: string) {

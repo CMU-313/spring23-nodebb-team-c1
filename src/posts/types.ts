@@ -16,3 +16,7 @@ export enum Action {
 export interface UserData {
   accounttype: string
 }
+
+export interface DBEndorseData {
+  uid: string
+}
