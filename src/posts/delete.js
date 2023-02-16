@@ -165,14 +165,6 @@ module.exports = function (Posts) {
     }
 
     async function deleteFromUserEndorsements(pids) {
-        const arrayOfUids = await db.getSetsMembers(pids.map(pid => `pid:${pid}:users_endorsed`));
-        const bulkRemove = [];
-        pids.forEach((pid, index) => {
-            arrayOfUids[index].forEach((uid) => {
-                bulkRemove.push([`uid:${uid}:endorsed`, pid]);
-            });
-        });
-        await db.sortedSetRemoveBulk(bulkRemove);
         await db.deleteAll(pids.map(pid => `pid:${pid}:users_endorsed`));
     }
 
