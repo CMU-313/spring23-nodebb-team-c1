@@ -2,17 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const db = require("../database");
 const plugins = require("../plugins");
-var Action;
-(function (Action) {
-    Action[Action["ENDORSE"] = 0] = "ENDORSE";
-    Action[Action["UNENDORSE"] = 1] = "UNENDORSE";
-})(Action || (Action = {}));
+const types_1 = require("./types");
 function default_1(Posts) {
     async function toggleEndorse(type, pid, uid) {
         if (parseInt(uid, 10) <= 0) {
             throw new Error('[[error:not-logged-in]]');
         }
-        const isEndorsing = type === Action.ENDORSE;
+        const isEndorsing = type === types_1.Action.ENDORSE;
         const [postData, hasEndorsed] = await Promise.all([
             Posts.getPostFields(pid, ['pid', 'uid']),
             Posts.hasEndorsed(pid, uid),
@@ -64,11 +60,22 @@ function default_1(Posts) {
         // must have at least one endorsement
         return numEndorsed > 0;
     };
+    async function checkInstructor(uid) {
+        // The next line calls a function in a module that has not been updated to TS yet
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        const userData = await db.getObject(`user:${uid}`, ['accounttype']);
+        const isInstructor = userData.accounttype === 'instructor';
+        if (!isInstructor) {
+            throw new Error('Only instructors can endorse/unendorse posts');
+        }
+    }
     Posts.endorse = async function (pid, uid) {
-        return await toggleEndorse(Action.ENDORSE, pid, uid);
+        await checkInstructor(uid);
+        return await toggleEndorse(types_1.Action.ENDORSE, pid, uid);
     };
     Posts.unendorse = async function (pid, uid) {
-        return await toggleEndorse(Action.UNENDORSE, pid, uid);
+        await checkInstructor(uid);
+        return await toggleEndorse(types_1.Action.UNENDORSE, pid, uid);
     };
 }
 exports.default = default_1;

@@ -1,20 +1,6 @@
 import db = require('../database');
 import plugins = require('../plugins');
-
-interface PostData {
-  pid: number,
-  uid: number
-}
-
-interface ToggleData {
-  post: PostData,
-  isEndorsed: boolean
-}
-
-enum Action {
-  ENDORSE,
-  UNENDORSE
-}
+import { Action, PostData, ToggleData, UserData } from './types';
 
 interface PostsType {
   getPostFields(pid: string, fields: string[]): Promise<PostData>,
@@ -89,11 +75,23 @@ export default function (Posts: PostsType) {
         return numEndorsed > 0;
     };
 
+    async function checkInstructor(uid: string) {
+        // The next line calls a function in a module that has not been updated to TS yet
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        const userData = await db.getObject(`user:${uid}`, ['accounttype']) as UserData;
+        const isInstructor = userData.accounttype === 'instructor';
+        if (!isInstructor) {
+            throw new Error('Only instructors can endorse/unendorse posts');
+        }
+    }
+
     Posts.endorse = async function (pid: string, uid: string) {
+        await checkInstructor(uid);
         return await toggleEndorse(Action.ENDORSE, pid, uid);
     };
 
     Posts.unendorse = async function (pid: string, uid: string) {
+        await checkInstructor(uid);
         return await toggleEndorse(Action.UNENDORSE, pid, uid);
     };
 }
