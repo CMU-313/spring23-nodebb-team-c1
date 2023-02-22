@@ -82,3 +82,7 @@ theme/*.sublime-workspace
 theme/.idea
 theme/.vscode
 theme/node_modules/
+
+"scripts": {
+    "postinstall": "patch-package"
+ }
