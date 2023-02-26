@@ -15,9 +15,6 @@
                         <i class="fa fa-arrow-circle-right <!-- IF !oldCid -->hidden<!-- ENDIF !oldCid -->" title="{{{ if privileges.isAdminOrMod }}}[[topic:moved-from, {oldCategory.name}]]{{{ else }}}[[topic:moved]]{{{ end }}}"></i>
                         {{{each icons}}}{@value}{{{end}}}
                     </span>
-                    {{{if (isPrivate=="true")}}}
-                        <span class="private_icon"> PRIVATE POST </span>
-                    {{{end}}}
                     <span component="topic/title">{title}</span>
                 </span>
             </h1>
