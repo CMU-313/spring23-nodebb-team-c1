@@ -109,7 +109,8 @@ describe('API', async () => {
         }
 
         // Create sample users
-        const adminUid = await user.create({ username: 'admin', password: '123456', email: 'test@example.org' });
+        // Admin needs to be an instructor to be able to endorse posts
+        const adminUid = await user.create({ username: 'admin', password: '123456', email: 'test@example.org', 'account-type': 'instructor' });
         const unprivUid = await user.create({ username: 'unpriv', password: '123456', email: 'unpriv@example.org' });
         await user.setUserField(adminUid, 'email', 'test@example.org');
         await user.setUserField(unprivUid, 'email', 'unpriv@example.org');
