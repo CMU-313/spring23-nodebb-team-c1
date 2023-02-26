@@ -67,6 +67,9 @@ Settings:
     notificationType_post-edit:
       type: string
       description: Notification type for post edits
+    notificationType_new-post:
+      type: string
+      description: Notification type for new posts
     sendChatNotifications:
       nullable: true
     sendPostNotifications:
@@ -141,6 +144,7 @@ Settings:
     - notificationType_follow
     - notificationType_group-invite
     - notificationType_group-leave
+    - notificationType_new-post
     - upvoteNotifFreq
     - acpLang
     - notificationType_new-register
