@@ -10,6 +10,35 @@ function default_1(Posts) {
     function userDBKey(uid) {
         return `user:${uid}`;
     }
+    Posts.endorsedBy = async function (pid) {
+        if (Array.isArray(pid)) {
+            const sets = pid.map(endorseDBKey);
+            // The next line calls a function in a module that has not been updated to TS yet
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+            const usersEndorsed = await db.getObjects(sets);
+            const uids = usersEndorsed.map(user => user === null || user === void 0 ? void 0 : user.uid);
+            const usernames = uids.map(async (uid) => {
+                if (uid === undefined) {
+                    return '';
+                }
+                // The next line calls a function in a module that has not been updated to TS yet
+                // eslint-disable-next-line max-len
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                return await db.getObjectField(userDBKey(uid), 'username');
+            });
+            // get all posts that have at least one endorsement
+            return await Promise.all(usernames);
+        }
+        // The next line calls a function in a module that has not been updated to TS yet
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        const userEndorsed = await db.getObject(endorseDBKey(pid));
+        if (userEndorsed === null) {
+            return '';
+        }
+        // The next line calls a function in a module that has not been updated to TS yet
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        return await db.getObjectField(userDBKey(userEndorsed.uid), 'username');
+    };
     async function toggleEndorse(type, pid, uid) {
         if (parseInt(uid, 10) <= 0) {
             throw new Error('[[error:not-logged-in]]');
@@ -48,6 +77,7 @@ function default_1(Posts) {
         return {
             post: postData,
             isEndorsed: isEndorsing,
+            endorsedBy: await Posts.endorsedBy(pid),
         };
     }
     // true if anybody has endorsed the post
@@ -65,35 +95,6 @@ function default_1(Posts) {
         const userEndorsed = await db.getObject(endorseDBKey(pid));
         // must have at least one endorsement
         return userEndorsed !== null;
-    };
-    Posts.endorsedBy = async function (pid) {
-        if (Array.isArray(pid)) {
-            const sets = pid.map(endorseDBKey);
-            // The next line calls a function in a module that has not been updated to TS yet
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-            const usersEndorsed = await db.getObjects(sets);
-            const uids = usersEndorsed.map(user => user === null || user === void 0 ? void 0 : user.uid);
-            const usernames = uids.map(async (uid) => {
-                if (uid === undefined) {
-                    return '';
-                }
-                // The next line calls a function in a module that has not been updated to TS yet
-                // eslint-disable-next-line max-len
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                return await db.getObjectField(userDBKey(uid), 'username');
-            });
-            // get all posts that have at least one endorsement
-            return await Promise.all(usernames);
-        }
-        // The next line calls a function in a module that has not been updated to TS yet
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        const userEndorsed = await db.getObject(endorseDBKey(pid));
-        if (userEndorsed === null) {
-            return '';
-        }
-        // The next line calls a function in a module that has not been updated to TS yet
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        return await db.getObjectField(userDBKey(userEndorsed.uid), 'username');
     };
     async function checkInstructor(uid) {
         // The next line calls a function in a module that has not been updated to TS yet
