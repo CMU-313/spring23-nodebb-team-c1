@@ -26,6 +26,7 @@ const helpers = require('./helpers');
 
 describe('Post\'s', () => {
     let voterUid;
+    let instructorUid;
     let voteeUid;
     let globalModUid;
     let postData;
@@ -49,6 +50,9 @@ describe('Post\'s', () => {
                     description: 'Test category created by testing script',
                 }, next);
             },
+            instructorUid: function (next) {
+                user.create({ username: 'instructor', 'account-type': 'instructor' }, next);
+            },
         }, (err, results) => {
             if (err) {
                 return done(err);
@@ -56,6 +60,7 @@ describe('Post\'s', () => {
 
             voterUid = results.voterUid;
             voteeUid = results.voteeUid;
+            instructorUid = results.instructorUid;
             globalModUid = results.globalModUid;
             cid = results.category.cid;
 
@@ -299,6 +304,32 @@ describe('Post\'s', () => {
             assert.equal(data.isBookmarked, false);
             const hasBookmarked = await posts.hasBookmarked([postData.pid], voterUid);
             assert.equal(hasBookmarked[0], false);
+        });
+    });
+
+    describe('endorsing', () => {
+        it('should endorse a post as an instructor', async () => {
+            const data = await apiPosts.endorse({ uid: instructorUid }, { pid: postData.pid, room_id: `topic_${postData.tid}` });
+            assert.equal(data.isEndorsed, true);
+            const hasEndorsed = await posts.hasEndorsed(postData.pid, voterUid);
+            assert.equal(hasEndorsed, true);
+        });
+
+        it('should unendorse a post as an instructor', async () => {
+            const data = await apiPosts.unendorse({ uid: instructorUid }, { pid: postData.pid, room_id: `topic_${postData.tid}` });
+            assert.equal(data.isEndorsed, false);
+            const hasEndorsed = await posts.hasEndorsed([postData.pid], voterUid);
+            assert.equal(hasEndorsed[0], false);
+        });
+
+        it('should not endorse a post as a student', async () => {
+            try {
+                await apiPosts.unendorse(
+                    { uid: voterUid },
+                    { pid: postData.pid, room_id: `topic_${postData.tid}` }
+                );
+                assert(false, 'should have thrown');
+            } catch (_) {}
         });
     });
 

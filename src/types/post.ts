@@ -3,12 +3,12 @@ import { TopicObject } from './topic';
 import { UserObjectSlim } from './user';
 
 export type PostObject = {
-  pid: number;
-  tid: number;
+  pid: number | string;
+  tid: number | string;
   content: string;
-  uid: number;
+  uid: number | string;
   timestamp: number;
-  deleted: boolean;
+  deleted: boolean | number;
   upvotes: number;
   downvotes: number;
   votes: number;
@@ -18,4 +18,8 @@ export type PostObject = {
   category: CategoryObject;
   isMainPost: boolean;
   replies: number;
+  deleterUid?: number;
+  cid: number | string;
+  toPid?: number | string;
+  flagId?: string;
 };

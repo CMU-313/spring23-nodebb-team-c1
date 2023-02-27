@@ -86,7 +86,10 @@ define('forum/topic/events', [
 
         $('[data-pid="' + data.post.pid + '"] .endorse-banner').filter(function (index, el) {
             return parseInt($(el).closest('[data-pid]').attr('data-pid'), 10) === parseInt(data.post.pid, 10);
-        }).attr('data-endorsed', data.isEndorsed).attr('hidden', !data.isEndorsed);
+        })
+            .attr('data-endorsed', data.isEndorsed)
+            .attr('hidden', !data.isEndorsed)
+            .html(`~ An instructor (${data.endorsedBy}) endorsed this post ~`);
     }
 
     function updateBookmarkCount(data) {
