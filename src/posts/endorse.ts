@@ -111,7 +111,7 @@ export default function (Posts: PostsType) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const userEndorsed = await db.getObject(endorseDBKey(pid)) as DBEndorseData;
         // must have at least one endorsement
-        return userEndorsed !== null;
+        return userEndorsed !== null && userEndorsed.uid !== undefined;
     };
 
     async function checkInstructor(uid: string) {

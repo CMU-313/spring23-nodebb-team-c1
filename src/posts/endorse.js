@@ -88,13 +88,13 @@ function default_1(Posts) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             const usersEndorsed = await db.getObjects(sets);
             // get all posts that have an endorsement
-            return usersEndorsed.map(x => x !== null);
+            return usersEndorsed.map(x => x !== null && x.uid !== undefined);
         }
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const userEndorsed = await db.getObject(endorseDBKey(pid));
         // must have at least one endorsement
-        return userEndorsed !== null;
+        return userEndorsed !== null && userEndorsed.uid !== undefined;
     };
     async function checkInstructor(uid) {
         // The next line calls a function in a module that has not been updated to TS yet
