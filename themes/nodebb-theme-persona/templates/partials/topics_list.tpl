@@ -75,7 +75,7 @@
                 <small class="hidden-xs">
                     <span class="timeago" title="{topics.timestampISO}">
                     </span> &bull; 
-                    <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->">Anonymous</a>
+                    <a href="<!-- IF topics.user.userslug -->Anyonymous<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->">Anonymous</a>
                 </small>                
                 {{{end}}}
                 <small class="visible-xs-inline">
