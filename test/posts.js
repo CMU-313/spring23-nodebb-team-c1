@@ -324,6 +324,16 @@ describe('Post\'s', () => {
 
         it('should not endorse a post as a student', async () => {
             try {
+                await apiPosts.endorse(
+                    { uid: voterUid },
+                    { pid: postData.pid, room_id: `topic_${postData.tid}` }
+                );
+                assert(false, 'should have thrown');
+            } catch (_) {}
+        });
+
+        it('should not unendorse a post as a student', async () => {
+            try {
                 await apiPosts.unendorse(
                     { uid: voterUid },
                     { pid: postData.pid, room_id: `topic_${postData.tid}` }
