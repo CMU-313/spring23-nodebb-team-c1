@@ -415,3 +415,51 @@ describe('post uploads management', () => {
         });
     });
 });
+
+describe('Post Notification filtering', () => {
+    let topic;
+    let uid;
+    let cid;
+    let isPrivate;
+
+    before(async () => {
+        uid = await user.create({
+            username: 'Private post maker',
+            password: 'abracadabra',
+            gdpr_consent: 1,
+        });
+
+        uid2 = await user.create({
+            username: 'filtered',
+            password: 'suprise123',
+            gdpr_consent: 1,
+            accounttype: 'student',
+        });
+
+        isPrivate = true;
+
+        ({ cid } = await categories.create({
+            name: 'Test Category',
+            description: 'Test category created by testing script',
+        }));
+
+        const topicPostData = await topics.post({
+            uid,
+            cid,
+            title: 'topic to test uploads with',
+            content: '[abcdef](/assets/uploads/files/abracadabra.png)',
+            isPrivate,
+        });
+
+        topic = topicPostData;
+    });
+
+    it('should not add to filtered users unread notifications', (done) => {
+ 
+        const notifications  = uid2.notifications.getUnreadInterval(uid2, 'day');
+        const unreadNotifs = notifications.filter(Boolean);
+        // If there are no notifications and no new topics, don't bother sending a digest
+        assert.strictEqual(unreadNotifs.length, 0);
+        done();
+    });
+});
