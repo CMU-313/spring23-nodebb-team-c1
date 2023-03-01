@@ -94,7 +94,6 @@ module.exports = function (Topics) {
     Topics.create = async function (data) {
         // This is an internal method, consider using Topics.post instead
         const timestamp = data.timestamp || Date.now();
-
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const tid = await db.incrObjectField('global', 'nextTid');
@@ -110,6 +109,7 @@ module.exports = function (Topics) {
             lastposttime: 0,
             postcount: 0,
             viewcount: 0,
+            isPrivate: data.isPrivate,
         };
         if (Array.isArray(data.tags) && data.tags.length) {
             topicData.tags = data.tags.join(',');
