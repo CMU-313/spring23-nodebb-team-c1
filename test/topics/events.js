@@ -124,7 +124,7 @@ describe('Topic Events', () => {
             //  test to refer to since composer.tpl is not in scope. Thus, I am
             //  simulating this behavior to make sure that isAnonymous actually
             //  returns true when toggleBox is set to true.
-            let toggleBox = true;
+            const toggleBox = true;
             composerData.isAnonymous = toggleBox;
             console.log(composerData.isAnonymous);
             assert.strictEqual(composerData.isAnonymous, true);
