@@ -31,6 +31,7 @@ privsTopics.get = async function (tid, uid) {
     const privData = _.zipObject(privs, userPrivileges);
     const isOwner = uid > 0 && uid === topicData.uid;
     const isAdminOrMod = isAdministrator || isModerator;
+    const isInstructor = await user.isInstructor(uid);
     const editable = isAdminOrMod;
     const deletable = (privData['topics:delete'] && (isOwner || isModerator)) || isAdministrator;
     const mayReply = privsTopics.canViewDeletedScheduled(topicData, {}, false, privData['topics:schedule']);
@@ -45,6 +46,7 @@ privsTopics.get = async function (tid, uid) {
         'posts:history': privData['posts:history'] || isAdministrator,
         'posts:delete': (privData['posts:delete'] && (!topicData.locked || isModerator)) || isAdministrator,
         'posts:view_deleted': privData['posts:view_deleted'] || isAdministrator,
+        'posts:endorse': (privData['posts:endorse'] || isInstructor),
         read: privData.read || isAdministrator,
         purge: (privData.purge && (isOwner || isModerator)) || isAdministrator,
 

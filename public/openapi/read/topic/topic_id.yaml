@@ -325,6 +325,8 @@ get:
                         type: boolean
                       posts:view_deleted:
                         type: boolean
+                      posts:endorse:
+                        type: boolean
                       read:
                         type: boolean
                       purge:
