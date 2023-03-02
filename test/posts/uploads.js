@@ -421,6 +421,7 @@ describe('Post Notification filtering', () => {
     let uid;
     let cid;
     let isPrivate;
+    let uid2;
 
     before(async () => {
         uid = await user.create({
