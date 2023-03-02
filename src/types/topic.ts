@@ -47,7 +47,7 @@ export type TopicSlimProperties = {
   title: string;
   slug: string;
   mainPid: number;
-  postcount: string;
+  postcount: number;
   viewcount: string;
   postercount: string;
   scheduled: string;
