@@ -118,13 +118,13 @@ describe('Topic Events', () => {
                 isAnonymous: false,
                 isPrivate: false,
             };
-            //contrived way of simulating the checkbox being clicked (i.e. = true)
-            //I wanted to call .checked and .val (the functions toggleBox calls)
-            //in reality, but there is no checkbox for the test to refer to since
-            //composer.tpl is not in scope. Thus, I am simulating this behavior to
-            //make sure that isAnonymous actually returns true when toggleBox is 
-            //set to true.
-            var toggleBox = true;
+            //  contrived way of simulating the checkbox being clicked
+            //  (i.e. = true) I wanted to call .checked and .val (the functions
+            //  toggleBox calls) in reality, but there is no checkbox for the
+            //  test to refer to since composer.tpl is not in scope. Thus, I am
+            //  simulating this behavior to make sure that isAnonymous actually
+            //  returns true when toggleBox is set to true.
+            let toggleBox = true;
             composerData.isAnonymous = toggleBox;
             console.log(composerData.isAnonymous);
             assert.strictEqual(composerData.isAnonymous, true);

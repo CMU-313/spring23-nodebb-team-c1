@@ -108,7 +108,7 @@ describe('i18n', () => {
 
                 //         assert(sourceKeys && translationKeys);
                 //         sourceKeys.forEach((key) => {
-                //         //assert((translationKeys.includes(key), `${namespace.slice(1, -5)}:${key} missing in ${language}`));
+        //  assert((translationKeys.includes(key), `${namespace.slice(1, -5)}:${key} missing in ${language}`));
                 //         });
                 //         assert.strictEqual(
                 //             sourceKeys.length,
