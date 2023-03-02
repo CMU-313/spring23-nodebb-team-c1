@@ -129,7 +129,6 @@ describe('Topic Events', () => {
           //set to true.
           var toggleBox = true;
           composerData.isAnonymous = toggleBox;
-          console.log("CHICKEN");
           console.log(composerData.isAnonymous);
           assert.strictEqual(composerData.isAnonymous, true);
         });
