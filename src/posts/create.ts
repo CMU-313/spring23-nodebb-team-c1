@@ -1,16 +1,44 @@
-"use strict";
 // Referenced @ziyanwang’s TypeScript translation from P1: https://github.com/CMU-313/NodeBB/pull/91
-const _ = require("lodash");
-const meta = require("../meta");
-const db = require("../database");
-const plugins = require("../plugins");
-const user = require("../user");
-const topics = require("../topics");
-const categories = require("../categories");
-const groups = require("../groups");
-const utils = require("../utils");
-module.exports = function (Posts) {
-    Posts.create = async function (data) {
+
+import _ = require('lodash');
+
+import meta = require('../meta');
+import db = require('../database');
+import plugins = require('../plugins');
+import user = require('../user');
+import topics = require('../topics');
+import categories = require ('../categories');
+import groups = require('../groups');
+import utils = require('../utils');
+
+import { TopicObject } from '../types';
+
+type Uploads = {
+    sync: (pid: number) => void;
+}
+
+type PostObject = {
+    pid: number;
+    tid: number;
+    content: string;
+    uid: string;
+    timestamp: number;
+    isMain?: boolean;
+    create?: (data: PostObject) => Promise<PostObject>;
+    toPid?: number;
+    ip?: number;
+    handle?: number;
+    cid?: number;
+    uploads?: Uploads;
+    isPrivate?: boolean;
+  };
+
+type Result = {
+    post: PostObject;
+}
+
+export = function (Posts: PostObject) {
+    Posts.create = async function (data:PostObject) {
         // This is an internal method, consider using Topics.reply instead
         const { uid } = data;
         const { tid } = data;
@@ -18,22 +46,25 @@ module.exports = function (Posts) {
         const timestamp = data.timestamp || Date.now();
         const isMain = data.isMain || false;
         const isPrivate = data.isPrivate || false;
+
         if (!uid && parseInt(uid, 10) !== 0) {
             throw new Error('[[error:invalid-uid]]');
         }
+
         if (data.toPid && !utils.isNumber(data.toPid)) {
             throw new Error('[[error:invalid-pid]]');
         }
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        const pid = await db.incrObjectField('global', 'nextPid');
-        let postData = {
+        const pid:number = await db.incrObjectField('global', 'nextPid') as number;
+        let postData:PostObject = {
             pid: pid,
             uid: uid,
             tid: tid,
             content: content,
             timestamp: timestamp,
         };
+
         if (data.toPid) {
             postData.toPid = data.toPid;
         }
@@ -47,28 +78,31 @@ module.exports = function (Posts) {
         }
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        let result = await plugins.hooks.fire('filter:post.create', { post: postData, data: data });
+        let result:Result = await plugins.hooks.fire('filter:post.create', { post: postData, data: data }) as Result;
         postData = result.post;
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         await db.setObject(`post:${postData.pid}`, postData);
+
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        const topicData = await topics.getTopicFields(tid, ['cid', 'pinned']);
+        const topicData:TopicObject = await topics.getTopicFields(tid, ['cid', 'pinned']) as TopicObject;
         postData.cid = topicData.cid;
-        async function addReplyTo(postData, timestamp) {
+
+        async function addReplyTo(postData:PostObject, timestamp:number) {
             if (!postData.toPid) {
                 return;
             }
             await Promise.all([
                 // The next line calls a function in a module that has not been updated to TS yet
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
-                db.sortedSetAdd(`pid:${postData.toPid}:replies`, timestamp, postData.pid),
+                db.sortedSetAdd(`pid:${postData.toPid}:replies`, timestamp, postData.pid) as PostObject,
                 // The next line calls a function in a module that has not been updated to TS yet
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
-                db.incrObjectField(`post:${postData.toPid}`, 'replies'),
+                db.incrObjectField(`post:${postData.toPid}`, 'replies') as PostObject,
             ]);
         }
+
         await Promise.all([
             // The next line calls a function in a module that has not been updated to TS yet
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -95,12 +129,12 @@ module.exports = function (Posts) {
         ]);
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        result = await plugins.hooks.fire('filter:post.get', { post: postData, uid: data.uid });
+        result = await plugins.hooks.fire('filter:post.get', { post: postData, uid: data.uid }) as Result;
         result.post.isMain = isMain;
         result.post.isPrivate = isPrivate;
         // The next line calls a function in a module that has not been updated to TS yet
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-        plugins.hooks.fire('action:post.save', { post: _.clone(result.post) });
+        plugins.hooks.fire('action:post.save', { post: _.clone(result.post) }) as Promise<void>;
         return result.post;
     };
-};
+}

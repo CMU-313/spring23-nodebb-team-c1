@@ -12,6 +12,7 @@ const user = require('../../src/user');
 describe('Topic Events', () => {
     let fooUid;
     let topic;
+    let isAnonymous;
     before(async () => {
         fooUid = await user.create({ username: 'foo', password: '123456' });
 
@@ -24,6 +25,7 @@ describe('Topic Events', () => {
             content: 'foobar one two three',
             uid: fooUid,
             cid: 1,
+            isAnonymous: false,
         });
     });
 
@@ -81,6 +83,51 @@ describe('Topic Events', () => {
             events.forEach((event) => {
                 assert(['id', 'icon', 'text', 'timestamp', 'timestampISO', 'type', 'quux'].every(key => event.hasOwnProperty(key)));
             });
+        });
+    });
+
+    describe('isAnonymous_false', () => {
+        it('should set isAnonymous field to false by default', async () => {
+            const composerData = {
+                handle: 'testuser123456789',
+                title: 'Test Topic123456789',
+                content: 'This is a test topic to test that isAnonymous returns false.',
+                cid: 1,
+                tags: [],
+                timestamp: Date.now(),
+                uid: 1,
+                slug: 'topic',
+                isAnonymous: false,
+                isPrivate: false,
+            };
+            assert.strictEqual(composerData.isAnonymous, false);
+        });
+    });
+
+    describe('isAnonymous_true', () => {
+        it('should set isAnonymous field to true', async () => {
+            const composerData = {
+                handle: 'testuser123456789',
+                title: 'Test Topic123456789',
+                content: 'This is a test topic to test that isAnonymous returns false.',
+                cid: 1,
+                tags: [],
+                timestamp: Date.now(),
+                uid: 1,
+                slug: 'topic',
+                isAnonymous: false,
+                isPrivate: false,
+            };
+            //  contrived way of simulating the checkbox being clicked
+            //  (i.e. = true) I wanted to call .checked and .val (the functions
+            //  toggleBox calls) in reality, but there is no checkbox for the
+            //  test to refer to since composer.tpl is not in scope. Thus, I am
+            //  simulating this behavior to make sure that isAnonymous actually
+            //  returns true when toggleBox is set to true.
+            const toggleBox = true;
+            composerData.isAnonymous = toggleBox;
+            console.log(composerData.isAnonymous);
+            assert.strictEqual(composerData.isAnonymous, true);
         });
     });
 

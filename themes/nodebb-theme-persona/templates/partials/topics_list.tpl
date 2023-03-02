@@ -60,7 +60,20 @@
                 </span>
                 {{{ end }}}
 
-                <small class="hidden-xs"><span class="timeago" title="{topics.timestampISO}"></span> &bull; <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->">{topics.user.displayname}</a></small>
+                {{{if (topics.isAnonymous!="true")}}}
+                <small class="hidden-xs">
+                    <span class="timeago" title="{topics.timestampISO}">
+                    </span> &bull; 
+                    <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->">{topics.user.displayname}</a>
+                </small>
+                {{{else}}}
+                <small class="hidden-xs">
+                    <span class="timeago" title="{topics.timestampISO}">
+                    </span> &bull; 
+                    <a href="<!-- IF topics.user.userslug -->Anyonymous<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->">Anonymous</a>
+                </small>                
+                {{{end}}}
+
                 <small class="visible-xs-inline">
                     <!-- IF topics.teaser.timestamp -->
                     <span class="timeago" title="{topics.teaser.timestampISO}"></span>
