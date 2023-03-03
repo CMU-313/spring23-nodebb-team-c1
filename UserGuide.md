@@ -55,7 +55,7 @@ Information on the Post Anonymously tests:
     Justification: 
         isAnonymous_false). This test case creates a new post with the default 
                             value of isAnonymous = false. This is consistent
-                            to the value of isAnonymous for all new posts. It 
+                           to the value of isAnonymous for all new posts. It 
                             then verifies that the value of isAnonymous for that 
                             post is indeed false, as we would expect. This test 
                             passes as expected.
@@ -87,6 +87,7 @@ To use and test it:
 11. Navigate to the General Discussion topics list
 12. Click on one of the private posts from the first user
 13. You should see an error page indicating no privilege
+14. On prexisting accounts, you should notice no increase in unread notifications from private marked posts
 
 ### Tests
 The tests for this feature can be found in test/topics.js.
