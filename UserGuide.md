@@ -18,36 +18,36 @@ The tests for this feature can be found in test/posts.js on lines 310-344. They 
 3. A student should get an error when trying to endorse a post
 4. A student should get an error when trying to unendorse a post
 
-These are the four desired behaviors for the backend.
+These are the three desired behaviors for the backend.
 
+## Post Anonymously
+How to test the Post Anonymously feature:
+1. Log in/Sign up as a student or professor
+2. Click any category (i.e. Announcements, General Discussion, etc.)
+3. Click "New Topic"
+4. Fill out the contents of your post. Before submitting, check the 
+    "Post Anonymously" checkbox
+5. Hit submit
+6. Click "NodeBB" in the upper left corner to go back to the home screen
+7. Click the category that you went to in step (2)
+8. At this point, you should be able to see a list of posts (or just your
+    post if that is the only post that has been made so far). As you will 
+    see, your post should have an anonymous profile picture, and where the
+    poster's username would normally appear now instead shows as 
+    "anonymous". Unlike on a post that was not posted anonymously, when you
+    click on either the profile picture and/or the username, doing so on an
+    anonymous post will not take you to the original poster's profile.
+9. Note: if you would like to see that these features are not present when
+    a post is made publicly (i.e. not anonymously), you can create another 
+    post, this time submitting without checking the "Post Anonymously" 
+    checkbox.
 
 How to test the Post Anonymously feature:
-    1). Log in/Sign up as a student or professor
-    2). Click any category (i.e. Announcements, General Discussion, etc.)
-    3). Click "New Topic"
-    4). Fill out the contents of your post. Before submitting, check the 
-        "Post Anonymously" checkbox
-    5). Hit submit
-    6). Click "NodeBB" in the upper left corner to go back to the home screen
-    7). Click the category that you went to in step (2)
-    8). At this point, you should be able to see a list of posts (or just your
-        post if that is the only post that has been made so far). As you will 
-        see, your post should have an anonymous profile picture, and where the
-        poster's username would normally appear now instead shows as 
-        "anonymous". Unlike on a post that was not posted anonymously, when you
-        click on either the profile picture and/or the username, doing so on an
-        anonymous post will not take you to the original poster's profile.
-    9). Note: if you would like to see that these features are not present when
-        a post is made publicly (i.e. not anonymously), you can create another 
-        post, this time submitting without checking the "Post Anonymously" 
-        checkbox.
-
-How to test the Post Anonymously feature:
-    1). Open Terminal (or an equivalent application)
-    2). CD into the root directory
-    3). Run: npm run test
-    4). After a few minutes, you should see that the newly included test cases
-        referring to this feature all pass.
+1. Open Terminal (or an equivalent application)
+2. CD into the root directory
+3. Run: npm run test
+4. After a few minutes, you should see that the newly included test cases
+    referring to this feature all pass.
 
 Information on the Post Anonymously tests:
     Location: 2 tests pertaining to this featuer are provided in 
@@ -71,3 +71,24 @@ Information on the Post Anonymously tests:
         No other tests are needed since the boolean value of isAnonymous
         fully determines whether or not the anonymous profile picture and 
         username appear.
+        
+## Private Question
+To use and test it:
+1. Create an account
+2. Navigate to General Discussions (or another category)
+3. Click the "New Topic" button
+4. You should see a toggle labeled as "Make Private"
+5. Turn the toggle on and make a private post
+6. You should see a "PRIVATE" label next to the topic title
+7. Go back to the General Discussion topics list
+8. Create a few more private and public posts
+9. You should see private labels for private posts and no labels for public posts
+10. Create another account
+11. Navigate to the General Discussion topics list
+12. Click on one of the private posts from the first user
+13. You should see an error page indicating no privilege
+
+### Tests
+The tests for this feature can be found in test/topics.js.
+The test case creates a new topic with isPrivate set to true and verifies its value in the "should not receive errors" section. 
+
