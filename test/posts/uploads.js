@@ -424,6 +424,8 @@ describe('Post Notification filtering', () => {
     let uid2;
 
     before(async () => {
+        _recreateFiles();
+
         uid = await user.create({
             username: 'Private post maker',
             password: 'abracadabra',
@@ -456,11 +458,11 @@ describe('Post Notification filtering', () => {
     });
 
     it('should not add to filtered users unread notifications', (done) => {
- 
-        const notifications  = uid2.notifications.getUnreadInterval(uid2, 'day');
+        const notifications = [user.notifications.getUnreadInterval(uid2, 'day')];
         const unreadNotifs = notifications.filter(Boolean);
+
         // If there are no notifications and no new topics, don't bother sending a digest
-        assert.strictEqual(unreadNotifs.length, 0);
+        assert(!unreadNotifs);
         done();
     });
 });
