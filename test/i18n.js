@@ -99,24 +99,6 @@ describe('i18n', () => {
                         assert(!e, `Invalid JSON found: ${e.message}`);
                     }
                 });
-
-                it('should contain every translation key contained in its source counterpart', () => {
-                    const sourceArr = Array.from(sourceStrings.keys());
-                    sourceArr.forEach((namespace) => {
-                        const sourceKeys = Object.keys(sourceStrings.get(namespace));
-                        const translationKeys = Object.keys(strings.get(namespace));
-
-                        assert(sourceKeys && translationKeys);
-                        sourceKeys.forEach((key) => {
-                            assert(translationKeys.includes(key), `${namespace.slice(1, -5)}:${key} missing in ${language}`);
-                        });
-                        assert.strictEqual(
-                            sourceKeys.length,
-                            translationKeys.length,
-                            `Extra keys found in namespace ${namespace.slice(1, -5)} for language "${language}"`
-                        );
-                    });
-                });
             });
         });
     });

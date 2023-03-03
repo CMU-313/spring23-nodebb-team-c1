@@ -24,6 +24,8 @@ const meta = require('../src/meta');
 const file = require('../src/file');
 const helpers = require('./helpers');
 
+const randData = require('./random/random_data');
+
 describe('Post\'s', () => {
     let voterUid;
     let instructorUid;
@@ -67,8 +69,8 @@ describe('Post\'s', () => {
             topics.post({
                 uid: results.voteeUid,
                 cid: results.category.cid,
-                title: 'Test Topic Title',
-                content: 'The content of test topic',
+                title: randData.randomString(meta.config.maximumTitleLength),
+                content: randData.randomString(meta.config.maximumPostLength),
             }, (err, data) => {
                 if (err) {
                     return done(err);
@@ -323,6 +325,16 @@ describe('Post\'s', () => {
         });
 
         it('should not endorse a post as a student', async () => {
+            try {
+                await apiPosts.endorse(
+                    { uid: voterUid },
+                    { pid: postData.pid, room_id: `topic_${postData.tid}` }
+                );
+                assert(false, 'should have thrown');
+            } catch (_) {}
+        });
+
+        it('should not unendorse a post as a student', async () => {
             try {
                 await apiPosts.unendorse(
                     { uid: voterUid },
