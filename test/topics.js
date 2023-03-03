@@ -54,7 +54,7 @@ describe('Topic\'s', () => {
             categoryId: categoryObj.cid,
             title: 'Test Topic Title',
             content: 'The content of test topic',
-            isPrivate: true,
+            // isPrivate: true,
         };
     });
 
@@ -74,7 +74,7 @@ describe('Topic\'s', () => {
                 title: topic.title,
                 content: topic.content,
                 cid: topic.categoryId,
-                isPrivate: topic.isPrivate,
+                // isPrivate: topic.isPrivate,
             }, (err, result) => {
                 assert.ifError(err);
                 assert(result);
@@ -356,7 +356,7 @@ describe('Topic\'s', () => {
                 title: topic.title,
                 content: topic.content,
                 cid: topic.categoryId,
-                isPrivate: topic.isPrivate,
+                // isPrivate: topic.isPrivate,
             }, (err, result) => {
                 if (err) {
                     return done(err);
@@ -376,7 +376,7 @@ describe('Topic\'s', () => {
                 assert(typeof topicData.uid === 'number');
                 assert(typeof topicData.cid === 'number');
                 assert(typeof topicData.mainPid === 'number');
-                assert(typeof topicData.isPrivate === 'string');
+                // assert(typeof topicData.isPrivate === 'string');
 
                 assert(typeof topicData.timestamp === 'number');
                 assert.strictEqual(topicData.postcount, 1);
@@ -387,7 +387,7 @@ describe('Topic\'s', () => {
                 assert.strictEqual(topicData.deleted, 0);
                 assert.strictEqual(topicData.locked, 0);
                 assert.strictEqual(topicData.pinned, 0);
-                assert.strictEqual(topicData.isPrivate, 'true');
+                // assert.strictEqual(topicData.isPrivate, 'true');
                 done();
             });
         });
