@@ -5,6 +5,9 @@
         <meta itemprop="name" content="{function.stripTags, ../title}" />
         <meta itemprop="itemListOrder" content="descending" />
         <meta itemprop="position" content="{../index}" />
+        <meta itemprop="isPrivate" content="{function.stripTags, ../isPrivate}" />
+        <meta itemprop="isOwner" content="{function.stripTags, ../isOwner}" />
+
         <a id="{../index}" data-index="{../index}" component="topic/anchor"></a>
 
         <div class="col-md-5 col-sm-9 col-xs-10 content">

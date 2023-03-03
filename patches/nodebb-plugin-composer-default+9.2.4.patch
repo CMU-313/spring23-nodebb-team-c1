@@ -1,0 +1,239 @@
+diff --git a/node_modules/nodebb-plugin-composer-default/static/less/composer.less b/node_modules/nodebb-plugin-composer-default/static/less/composer.less
+index e9a8ca6..8df0e13 100644
+--- a/node_modules/nodebb-plugin-composer-default/static/less/composer.less
++++ b/node_modules/nodebb-plugin-composer-default/static/less/composer.less
+@@ -460,6 +460,66 @@
+ 			animation: draft-saved 3s ease;
+ 		}
+ 	}
++
++	.switch {
++		position: relative;
++		display: inline-block;
++		width: 60px;
++		height: 34px;
++	}
++		
++	.switch input { 
++		opacity: 0;
++		width: 0;
++		height: 0;
++	}
++		
++	.slider {
++		position: absolute;
++		cursor: pointer;
++		top: 0;
++		left: 0;
++		right: 0;
++		bottom: 0;
++		background-color: #ccc;
++		-webkit-transition: .4s;
++		transition: .4s;
++	}
++		
++	.slider:before {
++		position: absolute;
++		content: "";
++		height: 26px;
++		width: 26px;
++		left: 4px;
++		bottom: 4px;
++		background-color: white;
++		-webkit-transition: .4s;
++		transition: .4s;
++	}	
++		
++	input:checked + .slider {
++		background-color: #2196F3;
++	}
++		
++	input:focus + .slider {
++		box-shadow: 0 0 1px #2196F3;
++	}
++		
++	input:checked + .slider:before {
++		-webkit-transform: translateX(26px);
++		-ms-transform: translateX(26px);
++		transform: translateX(26px);
++	}
++		
++	/* Rounded sliders */
++	.slider.round {
++		border-radius: 34px;
++	}
++		
++	.slider.round:before {
++		border-radius: 50%;
++	}
+ }
+ 
+ .datetime-picker {
+diff --git a/node_modules/nodebb-plugin-composer-default/static/lib/composer.js b/node_modules/nodebb-plugin-composer-default/static/lib/composer.js
+index 46334e7..f494e21 100644
+--- a/node_modules/nodebb-plugin-composer-default/static/lib/composer.js
++++ b/node_modules/nodebb-plugin-composer-default/static/lib/composer.js
+@@ -206,6 +206,8 @@ define('composer', [
+ 			tags: data.tags || [],
+ 			modified: !!((data.title && data.title.length) || (data.body && data.body.length)),
+ 			isMain: true,
++			isPrivate: data.isPrivate,
++ 			isAnonymous: data.isAnonymous,
+ 		};
+ 
+ 		({ pushData } = await hooks.fire('filter:composer.topic.push', {
+@@ -431,6 +433,8 @@ define('composer', [
+ 		var isEditing = postData ? !!postData.pid : false;
+ 		var isGuestPost = postData ? parseInt(postData.uid, 10) === 0 : false;
+ 		const isScheduled = postData.timestamp > Date.now();
++		var isAnonymous = postData ? !!postData.isAnonymous : false;
++		var isPrivate = postData ? !!postData.isPrivate : false;
+ 
+ 		// see
+ 		// https://github.com/NodeBB/NodeBB/issues/2994 and
+@@ -454,6 +458,8 @@ define('composer', [
+ 			maximumTagLength: config.maximumTagLength,
+ 			isTopic: isTopic,
+ 			isEditing: isEditing,
++			isAnonymous : isAnonymous,
++			isPrivate : isPrivate,
+ 			canSchedule: !!(isMain && privileges &&
+ 				((privileges['topics:schedule'] && !isEditing) || (isScheduled && privileges.view_scheduled))),
+ 			showHandleInput: config.allowGuestHandles &&
+@@ -623,6 +629,7 @@ define('composer', [
+ 	}
+ 
+ 	async function post(post_uuid) {
++		console.log('post_uuid: ' + post_uuid)
+ 		var postData = composer.posts[post_uuid];
+ 		var postContainer = $('.composer[data-uuid="' + post_uuid + '"]');
+ 		var handleEl = postContainer.find('.handle');
+@@ -630,10 +637,14 @@ define('composer', [
+ 		var bodyEl = postContainer.find('textarea');
+ 		var thumbEl = postContainer.find('input#topic-thumb-url');
+ 		var onComposeRoute = postData.hasOwnProperty('template') && postData.template.compose === true;
++		var toggleBox = postContainer.find('.toggle-anonymous');
+ 		const submitBtn = postContainer.find('.composer-submit');
++		var toggleEl = postContainer.find('.toggle');
+ 
+ 		titleEl.val(titleEl.val().trim());
+ 		bodyEl.val(utils.rtrim(bodyEl.val()));
++		toggleEl.val(toggleEl[0].checked);
++		toggleBox.val(toggleBox[0].checked);
+ 		if (thumbEl.length) {
+ 			thumbEl.val(thumbEl.val().trim());
+ 		}
+@@ -652,6 +663,8 @@ define('composer', [
+ 			titleLen: titleEl.val().length,
+ 			bodyEl: bodyEl,
+ 			bodyLen: bodyEl.val().length,
++			toggleBox: toggleBox,
++			toggleEl: toggleEl,
+ 		};
+ 
+ 		await hooks.fire('filter:composer.check', payload);
+@@ -696,6 +709,8 @@ define('composer', [
+ 				cid: categoryList.getSelectedCid(),
+ 				tags: tags.getTags(post_uuid),
+ 				timestamp: scheduler.getTimestamp(),
++				isAnonymous: toggleBox.val(),
++				isPrivate: toggleEl.val(),
+ 			};
+ 		} else if (action === 'posts.reply') {
+ 			route = `/topics/${postData.tid}`;
+@@ -705,6 +720,7 @@ define('composer', [
+ 				handle: handleEl ? handleEl.val() : undefined,
+ 				content: bodyEl.val(),
+ 				toPid: postData.toPid,
++				isAnonymous: toggleBox.val(),
+ 			};
+ 		} else if (action === 'posts.edit') {
+ 			method = 'put';
+@@ -718,6 +734,7 @@ define('composer', [
+ 				thumb: thumbEl.val() || '',
+ 				tags: tags.getTags(post_uuid),
+ 				timestamp: scheduler.getTimestamp(),
++				isAnonymous: toggleBox.val(),
+ 			};
+ 		}
+ 		var submitHookData = {
+diff --git a/node_modules/nodebb-plugin-composer-default/static/templates/compose.tpl b/node_modules/nodebb-plugin-composer-default/static/templates/compose.tpl
+index 8ce50b9..5e7014a 100644
+--- a/node_modules/nodebb-plugin-composer-default/static/templates/compose.tpl
++++ b/node_modules/nodebb-plugin-composer-default/static/templates/compose.tpl
+@@ -41,6 +41,10 @@
+ 			</div>
+ 		</div>
+ 
++		<div class="toggle-container private-toggle">
++			<!-- IMPORT partials/toggle.tpl -->
++		</div>
++
+ 		<div class="category-tag-row">
+ 			<div class="btn-toolbar formatting-bar">
+ 				<ul class="formatting-group">
+@@ -77,6 +81,8 @@
+ 					</form>
+ 				</ul>
+ 
++
++
+ 				<div class="btn-group pull-right action-bar">
+ 					<a href="{discardRoute}" class="btn btn-default composer-discard" data-action="discard" tabindex="-1"><i class="fa fa-times"></i> [[topic:composer.discard]]</a>
+ 
+@@ -93,6 +99,7 @@
+ 				</div>
+ 				<textarea name="content" form="compose-form" class="write" tabindex="5" placeholder="[[modules:composer.textarea.placeholder]]">{body}</textarea>
+ 			</div>
++			<h1>CHICKEN MCNUGGETS </h1>
+ 			<div class="col-md-6 hidden-sm hidden-xs preview-container">
+ 				<div class="help-text">
+ 					<span class="toggle-preview">[[modules:composer.hide_preview]]</span>
+diff --git a/node_modules/nodebb-plugin-composer-default/static/templates/composer.tpl b/node_modules/nodebb-plugin-composer-default/static/templates/composer.tpl
+index cf9de24..54abf9e 100644
+--- a/node_modules/nodebb-plugin-composer-default/static/templates/composer.tpl
++++ b/node_modules/nodebb-plugin-composer-default/static/templates/composer.tpl
+@@ -13,6 +13,7 @@
+ 			<!-- ENDIF isTopic -->
+ 			<!-- IF !isTopicOrMain -->
+ 			<h4 class="title">[[topic:composer.replying_to, "{title}"]]</h4>
++			<label class="switch"><input type="checkbox"><span class="slider round"></span></label>
+ 			<!-- ENDIF !isTopicOrMain -->
+ 			<div class="display-scheduler pull-right{{{ if !canSchedule }}} hidden{{{ end }}}">
+ 				<i class="fa fa-clock-o"></i>
+@@ -21,6 +22,7 @@
+ 				<button class="btn btn-sm btn-primary composer-submit" data-action="post" tabindex="-1"><i class="fa fa-chevron-right"></i></button>
+ 			</div>
+ 		</nav>
++		
+ 		<div class="row title-container">
+ 			{{{ if isTopic }}}
+ 			<div class="category-list-container hidden-sm hidden-xs">
+@@ -56,6 +58,7 @@
+ 
+ 				<ul class="dropdown-menu">{{{ each submitOptions }}}<li><a href="#" data-action="{./action}">{./text}</a></li>{{{ end }}}</ul>
+ 				<button class="btn btn-primary composer-submit" data-action="post" tabindex="6" data-text-variant=" [[topic:composer.schedule]]"><i class="fa fa-check"></i> [[topic:composer.submit]]</button>
++				<label class="switch"><input type="checkbox" class="toggle-anonymous"><span class="slider round">Post Anonymously</span></label>
+ 				<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+ 					<span class="caret"></span>
+ 					<span class="sr-only">[[topic:composer.additional-options]]</span>
+@@ -63,6 +66,10 @@
+ 			</div>
+ 		</div>
+ 
++		<div class="toggle-container private-toggle">
++			<!-- IMPORT partials/toggle.tpl -->
++		</div>
++
+ 		<div class="category-tag-row">
+ 			<div class="btn-toolbar formatting-bar">
+ 				<ul class="formatting-group">
+@@ -120,6 +127,8 @@
+ 						[[tags:select_tags]]
+ 					</button>
+ 
++					
++
+ 					<ul class="dropdown-menu">
+ 						<!-- BEGIN tagWhitelist -->
+ 						<li data-tag="{@value}"><a href="#">{@value}</a></li>

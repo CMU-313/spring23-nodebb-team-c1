@@ -18,3 +18,23 @@ The tests for this feature can be found in test/posts.js on lines 310-334. They 
 3. A student should get an error when trying to endorse a post
 
 These are the three desired behaviors for the backend.
+
+## Private Question
+To use and test it:
+1. Create an account
+2. Navigate to General Discussions (or another category)
+3. Click the "New Topic" button
+4. You should see a toggle labeled as "Make Private"
+5. Turn the toggle on and make a private post
+6. You should see a "PRIVATE" label next to the topic title
+7. Go back to the General Discussion topics list
+8. Create a few more private and public posts
+9. You should see private labels for private posts and no labels for public posts
+10. Create another account
+11. Navigate to the General Discussion topics list
+12. Click on one of the private posts from the first user
+13. You should see an error page indicating no privilege
+
+### Tests
+The tests for this feature can be found in test/topics.js.
+The test case creates a new topic with isPrivate set to true and verifies its value in the "should not receive errors" section. 
