@@ -106,9 +106,11 @@
         "nodebb-widget-essentials": "6.0.1",
         "nodemailer": "6.8.0",
         "nprogress": "0.2.0",
+        "plato": "1.7.0",
         "passport": "0.6.0",
         "passport-http-bearer": "1.0.1",
         "passport-local": "1.0.0",
+        "patch-package": "6.5.1",
         "pg": "8.8.0",
         "pg-cursor": "2.7.4",
         "postcss": "8.4.20",
@@ -145,8 +147,7 @@
         "xregexp": "5.1.1",
         "yargs": "17.6.2",
         "zxcvbn": "4.4.2",
-        "typescript": "4.9.5",
-        "patch-package": "6.5.1"
+        "typescript": "4.9.5"
     },
     "devDependencies": {
         "@apidevtools/swagger-parser": "^10.1.0",
