@@ -13,6 +13,7 @@
         "start": "npx tsc && node loader.js",
         "lint": "npx tsc && eslint --cache ./nodebb .",
         "test": "npx tsc && nyc --reporter=html --reporter=text-summary mocha",
+        "complexity-report": "./node_modules/.bin/es6-plato -r -d ./report src",
         "coverage": "nyc report --reporter=text-lcov > ./coverage/lcov.info",
         "coveralls": "nyc report --reporter=text-lcov | coveralls && rm -r coverage",
         "postinstall": "patch-package"
@@ -106,7 +107,7 @@
         "nodebb-widget-essentials": "6.0.1",
         "nodemailer": "6.8.0",
         "nprogress": "0.2.0",
-        "plato": "1.7.0",
+        "es6-plato": "1.2.3",
         "passport": "0.6.0",
         "passport-http-bearer": "1.0.1",
         "passport-local": "1.0.0",

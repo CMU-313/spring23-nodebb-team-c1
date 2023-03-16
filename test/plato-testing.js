@@ -1,20 +1,34 @@
-var plato = require('plato');
+'use strict';
 
-var files = [
-  './src/topics/create.js',
-  './src/topics/*.js',
-  './src/topics/*.ts',
+const plato = require('es6-plato');
+
+const files = [
+    './src/topics/create.js',
+    './src/topics/*.js',
+    './src/topics/*.ts',
 ];
+const outputDir = './output/dir';
 
-var outputDir = './output/dir';
-// null options for this example
-var options = {
-  title: 'Plato Report'
+const platoArgs = {
+    title: 'Plato Report',
+    eslint: {},
 };
+function callback(reports) {
+    const overview = plato.getOverviewReport(reports);
 
-var callback = function (report){
-// once done the analysis,
-// execute this
-};
+    const { total, average } = overview.summary;
 
-plato.inspect(files, outputDir, options, callback);
+    const output = `total
+        ----------------------
+        eslint: ${total.eslint}
+        sloc: ${total.sloc}
+        maintainability: ${total.maintainability}
+        average
+        ----------------------
+        eslint: ${average.eslint}
+        sloc: ${average.sloc}
+        maintainability: ${average.maintainability}`;
+
+    console.log(output);
+}
+plato.inspect(files, outputDir, platoArgs, callback);
