@@ -1,7 +1,9 @@
 var plato = require('plato');
 
 var files = [
-  '/Users/cindychen/Documents/CMU/17313/spring23-nodebb-team-c1/src/topics/create.js',
+  './src/topics/create.js',
+  './src/topics/*.js',
+  './src/topics/*.ts',
 ];
 
 var outputDir = './output/dir';
