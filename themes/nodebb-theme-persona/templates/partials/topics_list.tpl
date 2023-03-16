@@ -5,9 +5,6 @@
         <meta itemprop="name" content="{function.stripTags, ../title}" />
         <meta itemprop="itemListOrder" content="descending" />
         <meta itemprop="position" content="{../index}" />
-        <meta itemprop="isPrivate" content="{function.stripTags, ../isPrivate}" />
-        <meta itemprop="isOwner" content="{function.stripTags, ../isOwner}" />
-
         <a id="{../index}" data-index="{../index}" component="topic/anchor"></a>
 
         <div class="col-md-5 col-sm-9 col-xs-10 content">
@@ -24,13 +21,18 @@
                 <!-- ENDIF showSelect -->
 
                 <!-- IF !showSelect -->
-                <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->" class="pull-left">
-                    {{{ if ./thumbs.length }}}
-                    <img src="{./thumbs.0.url}" class="user-img not-responsive" />
-                    {{{ else }}}
-                    {buildAvatar(../user, "46", true, "not-responsive")}
-                    {{{ end }}}
-                </a>
+                    {{{if (topics.isAnonymous=="true")}}}
+                        <a href="#" class="pull-left"><img src="https://st3.depositphotos.com/7486768/17806/v/600/depositphotos_178065822-stock-illustration-profile-anonymous-face-icon-gray.jpg" class="user-img not-responsive" /></a>
+                    {{{end}}}
+                    {{{if (topics.isAnonymous!="true")}}}
+                        <a href="<!-- IF topics.user.userslug -->{config.relative_path}/user/{topics.user.userslug}<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->" class="pull-left"> 
+                            {{{ if ./thumbs.length }}}
+                            <img src="{./thumbs.0.url}" class="user-img not-responsive" />
+                            {{{ else }}}
+                            {buildAvatar(../user, "46", true, "not-responsive")}
+                            {{{ end }}}
+                        </a>
+                    {{{end}}}
                 <!-- ENDIF !showSelect -->
             </div>
 
@@ -76,7 +78,6 @@
                     <a href="<!-- IF topics.user.userslug -->Anyonymous<!-- ELSE -->#<!-- ENDIF topics.user.userslug -->">Anonymous</a>
                 </small>                
                 {{{end}}}
-
                 <small class="visible-xs-inline">
                     <!-- IF topics.teaser.timestamp -->
                     <span class="timeago" title="{topics.teaser.timestampISO}"></span>
