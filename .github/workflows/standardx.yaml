@@ -52,12 +52,6 @@ jobs:
         with:
           useLockFile: false
 
-      - name: Install StandardJS
-        run: npm install standard
-      
-      - name: Install standardx
-        run: npm install standardx
-
       - name: Setup on MongoDB
         env:
           SETUP: >-
@@ -84,6 +78,9 @@ jobs:
             }
         run: |
           node app --setup="${SETUP}" --ci="${CI}"
+
+      - name: Install standardx
+        run: npm ci standardx
 
       - name: Run Standardx
         run: npm run standardx
