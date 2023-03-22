@@ -1,4 +1,4 @@
-name: Lint
+name: Standardx (StandardJS)
 
 on:
   push:
@@ -20,7 +20,7 @@ jobs:
     permissions:
       checks: write  # for coverallsapp/github-action to create new checks
       contents: read  # for actions/checkout to fetch code
-    name: Lint
+    name: Standardx (StandardJS)
     strategy:
       fail-fast: false
       matrix:
