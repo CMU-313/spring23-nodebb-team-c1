@@ -17,6 +17,7 @@ connection.connect = async function (options) {
         } else if (options.sentinels) {
             cxn = new Redis({
                 sentinels: options.sentinels,
+                family: 6,
                 ...options.options,
             });
         } else if (redis_socket_or_host && String(redis_socket_or_host).indexOf('/') >= 0) {
@@ -26,6 +27,7 @@ connection.connect = async function (options) {
                 path: redis_socket_or_host,
                 password: options.password,
                 db: options.database,
+                family: 6,
             });
         } else {
             // Else, connect over tcp/ip
@@ -35,6 +37,7 @@ connection.connect = async function (options) {
                 port: options.port,
                 password: options.password,
                 db: options.database,
+                family: 6,
             });
         }
 
