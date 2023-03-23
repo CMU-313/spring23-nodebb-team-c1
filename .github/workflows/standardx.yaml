@@ -55,4 +55,4 @@ jobs:
         run: npm install standardx
 
       - name: Run Standardx
-        run: npx tsc && npx standardx
+        run: npx run standardx_test

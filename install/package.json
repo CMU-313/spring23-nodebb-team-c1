@@ -217,13 +217,15 @@
     "standard": {
         "ignore": [
             "/src/upgrades/",
-            "/test/mocks/databasemock.js"
+            "/test/mocks/databasemock.js",
+            "webpack.common.js"
         ]
     },
     "standardx": {
         "ignore": [
             "/src/upgrades/",
-            "/test/mocks/databasemock.js"
+            "/test/mocks/databasemock.js",
+            "webpack.common.js"
         ]
     }
 }
