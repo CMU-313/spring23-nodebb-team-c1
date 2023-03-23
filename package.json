@@ -211,5 +211,17 @@
             "email": "baris@nodebb.org",
             "url": "https://github.com/barisusakli"
         }
-    ]
+    ],
+    "standard": {
+        "ignore": [
+            "/src/upgrades/",
+            "/test/mocks/databasemock.js"
+        ]
+    },
+    "standardx": {
+        "ignore": [
+            "/src/upgrades/",
+            "/test/mocks/databasemock.js"
+        ]
+    }
 }
