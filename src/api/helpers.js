@@ -26,7 +26,11 @@ exports.buildReqObject = (req, payload) => {
     const referer = headers.referer || '';
 
     if (!host) {
-        host = url.parse(referer).host || '';
+        try {
+            host = new url.URL(referer).host || '';
+        } catch (err) {
+            host = '';
+        }
     }
 
     return {

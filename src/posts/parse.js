@@ -84,8 +84,14 @@ module.exports = function (Posts) {
         while (current !== null) {
             if (current[1]) {
                 try {
-                    parsed = url.parse(current[1]);
-                    if (!parsed.protocol) {
+                    let isProtocoled = false;
+                    try {
+                        parsed = new url.URL(current[1]);
+                        isProtocoled = parsed.protocol;
+                    } catch (err) {
+                        isProtocoled = false;
+                    }
+                    if (!isProtocoled) {
                         if (current[1].startsWith('/')) {
                             // Internal link
                             absolute = nconf.get('base_url') + current[1];
@@ -99,7 +105,7 @@ module.exports = function (Posts) {
                         content.slice(current.index + regex.length + current[1].length);
                     }
                 } catch (err) {
-                    winston.verbose(err.messsage);
+                    winston.verbose(err.message);
                 }
             }
             current = regex.regex.exec(content);

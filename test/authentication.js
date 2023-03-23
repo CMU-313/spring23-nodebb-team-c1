@@ -183,7 +183,8 @@ describe('authentication', () => {
 
     it('should regenerate the session identifier on successful login', async () => {
         const matchRegexp = /express\.sid=s%3A(.+?);/;
-        const { hostname, path } = url.parse(nconf.get('url'));
+        const { hostname, pathname, search } = new url.URL(nconf.get('url'));
+        const path = pathname + search;
 
         const sid = String(jar._jar.store.idx[hostname][path]['express.sid']).match(matchRegexp)[1];
         await helpers.logoutUser(jar);

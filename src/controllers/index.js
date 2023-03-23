@@ -3,11 +3,13 @@
 const nconf = require('nconf');
 const validator = require('validator');
 
+const urlmod = require('url');
 const meta = require('../meta');
 const user = require('../user');
 const plugins = require('../plugins');
 const privileges = require('../privileges');
 const helpers = require('./helpers');
+
 
 const Controllers = module.exports;
 
@@ -345,9 +347,12 @@ Controllers.outgoing = function (req, res, next) {
         'http', 'https', 'ftp', 'ftps', 'mailto', 'news', 'irc', 'gopher',
         'nntp', 'feed', 'telnet', 'mms', 'rtsp', 'svn', 'tel', 'fax', 'xmpp', 'webcal',
     ];
-    const parsed = require('url').parse(url);
-
-    if (!url || !parsed.protocol || !allowedProtocols.includes(parsed.protocol.slice(0, -1))) {
+    try {
+        const parsed = new urlmod.URL(url);
+        if (!url || !parsed.protocol || !allowedProtocols.includes(parsed.protocol.slice(0, -1))) {
+            return next();
+        }
+    } catch (err) {
         return next();
     }
 
