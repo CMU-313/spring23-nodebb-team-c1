@@ -406,13 +406,14 @@ ajaxify.widgets = { render: render };
                 }
 
                 if (xhr.getResponseHeader('X-Redirect')) {
-                    return callback({
+                    const result = {
                         data: {
                             status: 302,
                             responseJSON: data,
                         },
                         textStatus: 'error',
-                    });
+                    };
+                    return callback(result);
                 }
 
                 ajaxify.data = data;
@@ -428,10 +429,11 @@ ajaxify.widgets = { render: render };
                     data.responseJSON = data.responseJSON || {};
                     data.responseJSON.error = '[[error:no-connection]]';
                 }
-                callback({
+                const response = {
                     data: data,
                     textStatus: textStatus,
-                });
+                };
+                callback(response);
             },
         });
     };

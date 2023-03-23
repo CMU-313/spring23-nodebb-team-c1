@@ -209,14 +209,13 @@ async function completeConfigSetup(config) {
     }
 
     // If port is explicitly passed via install vars, use it. Otherwise, glean from url if set.
-    const urlObj = url.parse(config.url);
+    const urlObj = new url.URL(config.url);
     if (urlObj.port && (!install.values || !install.values.hasOwnProperty('port'))) {
         config.port = urlObj.port;
     }
 
     // Remove trailing slash from non-subfolder installs
-    if (urlObj.path === '/') {
-        urlObj.path = '';
+    if (urlObj.pathname === '/') {
         urlObj.pathname = '';
     }
 

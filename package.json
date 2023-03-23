@@ -195,11 +195,6 @@
             "comma-dangle": 0
         }
     },
-    "standardx": {
-        "ignore": [
-            ".eslintrc.cjs"
-        ]
-    },
     "maintainers": [
         {
             "name": "Andrew Rodrigues",
