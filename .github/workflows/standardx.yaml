@@ -55,6 +55,9 @@ jobs:
       - name: Check scripts
         run: npm run
 
+      - name: Install standardx
+        run: npm install standardx
+
       - name: Setup on MongoDB
         env:
           SETUP: >-
@@ -83,4 +86,4 @@ jobs:
           node app --setup="${SETUP}" --ci="${CI}"
 
       - name: Run Standardx
-        run: npm run standardx
+        run: npm run standardx_test
