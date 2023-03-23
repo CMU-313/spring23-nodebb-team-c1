@@ -86,4 +86,4 @@ jobs:
           node app --setup="${SETUP}" --ci="${CI}"
 
       - name: Run Standardx
-        run: npm run standardx_test
+        run: npx tsc && npx standardx
