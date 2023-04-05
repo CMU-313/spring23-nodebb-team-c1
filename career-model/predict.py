@@ -2,6 +2,9 @@ import pandas as pd
 import joblib
 from pydantic import BaseModel, Field
 from pydantic.tools import parse_obj_as
+import sys
+import json
+import os
 
 # Pydantic Models
 class Student(BaseModel):
@@ -41,10 +44,21 @@ def predict(student):
     # Use Pydantic to validate model fields exist
     student = parse_obj_as(Student, student)
 
-    clf = joblib.load('./model.pkl')
-
+    path = os.path.dirname(__file__)
+    clf = joblib.load(os.path.join(path, 'model.pkl'))
+    
     student = student.dict(by_alias=True)
     query = pd.DataFrame(student, index=[0])
     prediction = clf.predict(query) # TODO: Error handling ??
 
-    return { 'good_employee': prediction[0] }
+    # return { 'good_employee': prediction[0] }
+    return prediction[0]
+
+def main(student_str):
+    student = json.loads(student_str)
+    print(predict(student))
+
+if __name__ == '__main__':
+    if len(sys.argv)>1:
+        student = sys.argv[1]
+        main(student)

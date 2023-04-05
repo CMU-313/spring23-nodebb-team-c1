@@ -3,6 +3,7 @@
 const helpers = require('../helpers');
 const user = require('../../user');
 const db = require('../../database');
+const spawnSync = require("child_process").spawnSync;
 
 const Career = module.exports;
 
@@ -20,7 +21,12 @@ Career.register = async (req, res) => {
             num_past_internships: userData.num_past_internships,
         };
 
-        userCareerData.prediction = Math.round(Math.random()); // TODO: Change this line to do call and retrieve actual candidate success prediction from the model instead of using a random number
+        const predictFile = 'career-model/predict.py';
+        const args = [JSON.stringify(userCareerData)];
+
+        const message = spawnSync('python', [predictFile, args]);
+        console.log(`good_employee?: ${message.stdout}`);
+        userCareerData.prediction = parseInt(message.stdout);
 
         await user.setCareerData(req.uid, userCareerData);
         db.sortedSetAdd('users:career', req.uid, req.uid);
