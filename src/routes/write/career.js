@@ -9,9 +9,7 @@ const { setupApiRoute } = routeHelpers;
 
 function authenticatedRoutes() {
     const middlewares = [middleware.ensureLoggedIn];
-
     setupApiRoute(router, 'post', '/register', [...middlewares], controllers.write.career.register);
-    
 }
 
 module.exports = function () {

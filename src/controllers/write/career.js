@@ -1,9 +1,9 @@
 'use strict';
 
+const { spawnSync } = require('child_process');
 const helpers = require('../helpers');
 const user = require('../../user');
 const db = require('../../database');
-const spawnSync = require("child_process").spawnSync;
 
 const Career = module.exports;
 
@@ -26,7 +26,7 @@ Career.register = async (req, res) => {
 
         const message = spawnSync('python', [predictFile, args]);
         console.log(`good_employee?: ${message.stdout}`);
-        userCareerData.prediction = parseInt(message.stdout);
+        userCareerData.prediction = parseInt(message.stdout, 10);
 
         await user.setCareerData(req.uid, userCareerData);
         db.sortedSetAdd('users:career', req.uid, req.uid);
