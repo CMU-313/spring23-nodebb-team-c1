@@ -1,0 +1,47 @@
+post:
+  tags:
+    - career
+  summary: Register a student's career-related data
+  description: This operation adds a student career-related data
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            student_id:
+              type: string
+            age:
+              type: string
+            gender:
+              type: string
+            major:
+              type: string
+            gpa:
+              type: string
+            extra_curriular:
+              type: string
+            num_programming_languages:
+              type: string
+            num_past_internships:
+              type: string
+            token:
+              type: string
+            noscript:
+              type: string
+            _csrf:
+              type: string
+  responses:
+    '200':
+      description: Data successfully updated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                $ref: ../../components/schemas/Status.yaml#/Status
+              response:
+                type: object
+                properties: {}
