@@ -83,6 +83,9 @@ theme/.idea
 theme/.vscode
 theme/node_modules/
 
+# Career Model: Python Ignores
+__pycache__
+
 "scripts": {
     "postinstall": "patch-package"
- }
+}
