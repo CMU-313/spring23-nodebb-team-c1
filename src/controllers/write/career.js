@@ -33,6 +33,6 @@ Career.register = async (req, res) => {
         helpers.formatApiResponse(200, res);
     } catch (err) {
         console.log(err);
-        helpers.noScriptErrors(req, res, err.message, 400, userCareerData);
+        helpers.noScriptErrors(req, res, err.message, 400);
     }
 };
