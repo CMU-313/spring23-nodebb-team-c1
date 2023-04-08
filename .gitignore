@@ -4,6 +4,7 @@ npm-debug.log
 node_modules/
 sftp-config.json
 config.json
+config_flyio.json
 jsconfig.json
 public/src/nodebb.min.js
 !src/views/config.json
@@ -83,6 +84,9 @@ theme/.idea
 theme/.vscode
 theme/node_modules/
 
+# Career Model: Python Ignores
+__pycache__
+
 "scripts": {
     "postinstall": "patch-package"
- }
+}

@@ -132,7 +132,6 @@
         "spdx-license-list": "6.6.0",
         "spider-detector": "2.0.0",
         "standard": "^17.0.0",
-        "standardx": "^7.0.0",
         "terser-webpack-plugin": "5.3.6",
         "textcomplete": "0.18.2",
         "textcomplete.contenteditable": "0.1.1",
