@@ -21,6 +21,9 @@ Career.register = async (req, res) => {
             num_past_internships: userData.num_past_internships,
         };
 
+        const message2 = spawnSync('pwd');
+        console.log(`pwd: ${message2.stdout}`);
+
         const predictFile = 'career-model/predict.py';
         const args = [JSON.stringify(userCareerData)];
 
