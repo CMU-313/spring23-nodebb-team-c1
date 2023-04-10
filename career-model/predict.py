@@ -52,7 +52,7 @@ def predict(student):
     prediction = clf.predict(query) # TODO: Error handling ??
 
     # return { 'good_employee': prediction[0] }
-    return prediction[0]
+    return prediction[0].item()
 
 def main(student_str):
     student = json.loads(student_str)
