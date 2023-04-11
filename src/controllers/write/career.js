@@ -21,14 +21,15 @@ Career.register = async (req, res) => {
             num_past_internships: userData.num_past_internships,
         };
 
-        const message2 = spawnSync('pwd');
-        console.log(`pwd: ${message2.stdout}`);
+        const message2 = spawnSync('ls');
+        console.log(`ls: ${message2.stdout}`);
 
         const predictFile = 'career-model/predict.py';
         const args = [JSON.stringify(userCareerData)];
 
         const message = spawnSync('python', [predictFile, args]);
         console.log(`good_employee?: ${message.stdout}`);
+        console.log(`error: ${message.stderr}`);
         userCareerData.prediction = parseInt(message.stdout, 10);
 
         await user.setCareerData(req.uid, userCareerData);
