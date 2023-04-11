@@ -56,8 +56,7 @@ def predict(student):
 
 def main(student_str):
     student = json.loads(student_str)
-    # print(predict(student))
-    print("1")
+    print(predict(student))
 
 if __name__ == '__main__':
     if len(sys.argv)>1:
