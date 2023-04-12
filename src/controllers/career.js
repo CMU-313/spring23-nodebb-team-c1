@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.get = void 0;
 const user_1 = __importDefault(require("../user"));
 const helpers_1 = __importDefault(require("./helpers"));
+/* eslint-disable import/prefer-default-export */
 async function get(req, res) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const userData = await user_1.default.getUserFields(req.uid, ['accounttype']);

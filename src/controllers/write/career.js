@@ -8,6 +8,7 @@ const child_process_1 = require("child_process");
 const helpers_1 = __importDefault(require("../helpers"));
 const user_1 = __importDefault(require("../../user"));
 const database_1 = __importDefault(require("../../database"));
+/* eslint-disable import/prefer-default-export */
 async function register(req, res) {
     const userData = req.body;
     try {

@@ -21,6 +21,7 @@ type CareerObject = {
     breadcrumbs: Breadcrumb;
 }
 
+/* eslint-disable import/prefer-default-export */
 export async function get(req: Request & { uid: number }, res : Response):Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     const userData = await user.getUserFields(req.uid, ['accounttype']) as UserObject;

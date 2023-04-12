@@ -16,6 +16,7 @@ type CareerDataObject = {
     prediction?: number;
 };
 
+/* eslint-disable import/prefer-default-export */
 export async function register(req: Request & { uid: number }, res : Response):Promise<void> {
     const userData = req.body as CareerDataObject;
     try {
