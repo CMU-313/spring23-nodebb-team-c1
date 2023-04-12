@@ -1,28 +1,32 @@
-'use strict';
-
-const user = require('../user');
-const helpers = require('./helpers');
-
-const careerController = module.exports;
-
-careerController.get = async function (req, res) {
-    const userData = await user.getUserFields(req.uid, ['accounttype']);
-
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.get = void 0;
+const user_1 = __importDefault(require("../user"));
+const helpers_1 = __importDefault(require("./helpers"));
+async function get(req, res) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    const userData = await user_1.default.getUserFields(req.uid, ['accounttype']);
     const accountType = userData.accounttype;
     let careerData = {};
-
     if (accountType === 'recruiter') {
-        careerData.allData = await user.getAllCareerData();
-    } else {
-        const userCareerData = await user.getCareerData(req.uid);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        careerData.allData = await user_1.default.getAllCareerData();
+    }
+    else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        const userCareerData = await user_1.default.getCareerData(req.uid);
         if (userCareerData) {
             careerData = userCareerData;
-        } else {
+        }
+        else {
             careerData.newAccount = true;
         }
     }
-
     careerData.accountType = accountType;
-    careerData.breadcrumbs = helpers.buildBreadcrumbs([{ text: 'Career', url: '/career' }]);
+    careerData.breadcrumbs = helpers_1.default.buildBreadcrumbs([{ text: 'Career', url: '/career' }]);
     res.render('career', careerData);
-};
+}
+exports.get = get;
